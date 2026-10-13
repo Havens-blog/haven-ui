@@ -1,0 +1,64 @@
+{
+  "name": "@haven/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.30.3",
+  "description": "平台共享前端组件（叶子组件层）：不含业务语义、不含外壳，供 e-cam-web / e-cmdb-web / haven-console 消费",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./IconFont": {
+      "types": "./src/entries/IconFont.ts",
+      "import": "./src/entries/IconFont.ts"
+    },
+    "./ManagerHeader": {
+      "types": "./src/entries/ManagerHeader.ts",
+      "import": "./src/entries/ManagerHeader.ts"
+    },
+    "./AssetExportDialog": {
+      "types": "./src/entries/AssetExportDialog.ts",
+      "import": "./src/entries/AssetExportDialog.ts"
+    },
+    "./CustomIconSelect": {
+      "types": "./src/entries/CustomIconSelect.ts",
+      "import": "./src/entries/CustomIconSelect.ts"
+    },
+    "./types/asset": {
+      "types": "./src/types/asset.ts",
+      "import": "./src/types/asset.ts"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "verify": "pnpm typecheck && pnpm test"
+  },
+  "peerDependencies": {
+    "element-plus": "^2.11.7",
+    "vue": "^3.5.22"
+  },
+  "devDependencies": {
+    "@element-plus/icons-vue": "2.3.2",
+    "@types/node": "24.10.0",
+    "@vitejs/plugin-vue": "6.0.1",
+    "@vue/test-utils": "2.4.6",
+    "@vue/tsconfig": "0.8.1",
+    "element-plus": "2.11.7",
+    "happy-dom": "20.11.6",
+    "sass": "1.93.3",
+    "typescript": "5.9.3",
+    "vite": "7.2.0",
+    "vitest": "4.1.5",
+    "vue": "3.5.22",
+    "vue-tsc": "3.1.3"
+  }
+}

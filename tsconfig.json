@@ -1,0 +1,29 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "types": [
+      "node"
+    ],
+    // @vue/tsconfig 基座为对齐 Vite 默认构建目标而锁 lib=ES2020；本包 typecheck 覆盖
+    // __tests__（随包携带的 AssetExportDialog 单测使用 Array.prototype.at，需 ES2022）。
+    // 注意：lib 放宽仅影响类型检查，发布源码仍应遵循 ES2020 可用 API。
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "noEmit": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "vite.config.ts"
+  ]
+}
