@@ -42,7 +42,7 @@ import { IconFont } from '@haven/ui/IconFont'
 import { ManagerHeader } from '@haven/ui/ManagerHeader'
 import { AssetExportDialog, type ExportFieldConfig } from '@haven/ui/AssetExportDialog'
 import { ProviderIcon } from '@haven/ui/ProviderIcon'
-import { getProviderIcon } from '@haven/ui/provider'
+import { getProviderIcon, getProviderLabel } from '@haven/ui/provider'
 
 // ❌ 禁止：从桶文件 @haven/ui 导入
 import { IconFont } from '@haven/ui'
@@ -106,8 +106,9 @@ import 'element-plus/es/components/tooltip/style/css'
 `src/components/__tests__/ProviderIcon.test.ts` 的「不变量」用例）。
 
 平台级**数据**与组件同样按子路径导出（`@haven/ui/provider`）。判断标准是"这个数据是
-平台统一口径，还是某个应用的业务语义"：云厂商图标映射属前者（已进包）；导航菜单图标
-`MODULE_ICONS`、资产类型图标 `ASSET_TYPE_ICONS`、云厂商的区域/资产类型/特性表属后者（留在应用内）。
+平台统一口径，还是某个应用的业务语义"：云厂商图标映射（`getProviderIcon`）与云厂商展示名
+（`getProviderLabel`）属前者（已进包）；导航菜单图标 `MODULE_ICONS`、资产类型图标
+`ASSET_TYPE_ICONS`、云厂商的区域/资产类型/特性表属后者（留在应用内）。
 
 ## 校验
 
@@ -126,12 +127,15 @@ pnpm verify        # typecheck + test
 | `CustomIconSelect`（+ `constants.ts`） | 261 + 167 行 | 与 e-cam-web 逐字节相同；依赖包内 IconFont |
 | `ProviderIcon` | 79 行 | 随其平台级依赖 `src/provider/icons.ts` 一并下沉；不依赖 element-plus |
 | `src/provider/icons.ts` | 62 行 | 云厂商图标映射（26 个 token）单一来源；应用侧 re-export，调用点零改动 |
+| `src/provider/labels.ts` | 73 行 | 云厂商展示名（6 标准键 + 别名/扩展云归一）单一来源；应用侧 re-export，调用点零改动 |
 
 组件样式**完全自包含**（零 Sass 变量、零 `@use/@import`，仅用 CSS 变量 `var(--…)`），
 故可直接编译，主题仍由消费方 CSS 变量驱动。
 
-**待办**：`haven-console` / `opsagent-web` 尚未接入。
+**待办**：无——`haven-console` / `opsagent-web` 不使用本包任何导出（无叶子组件副本、无
+provider 图标/展示名调用），故「接入」对它们不适用；待其首次需要共享叶子组件时再接入即可。
 
 已接入：`e-cam-web`（提交 `ec8d86c`）、`e-cmdb-web`（提交 `eee4746`）——两个应用都已
 删除全部本地副本，"任一组件不再有第二份实现"成立（`shared-hashes.json` 里的组件类登记
-已随之清空，只剩请求层/设计令牌/工具等其它共享面）。
+已随之清空，只剩请求层/设计令牌/工具等其它共享面）。展示名 `getProviderLabel` 下沉为
+`e-cam-web`（`b6da585`）、`e-cmdb-web`（`8694632`）。

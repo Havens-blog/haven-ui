@@ -6,3 +6,4 @@
  * 故即便被入口引用也不会把任何 CSS 带进首屏。
  */
 export { PROVIDER_ICONS, getProviderIcon } from './icons'
+export { PROVIDER_DISPLAY_NAMES, getProviderLabel } from './labels'
