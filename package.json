@@ -32,6 +32,14 @@
     "./types/asset": {
       "types": "./src/types/asset.ts",
       "import": "./src/types/asset.ts"
+    },
+    "./ProviderIcon": {
+      "types": "./src/entries/ProviderIcon.ts",
+      "import": "./src/entries/ProviderIcon.ts"
+    },
+    "./provider": {
+      "types": "./src/provider/index.ts",
+      "import": "./src/provider/index.ts"
     }
   },
   "files": [

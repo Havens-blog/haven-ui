@@ -37,10 +37,12 @@ haven-console 4.3KB 属合理分歧）。外壳要统一的是**契约与数据*
 ### 一律走**子路径**导入，不要用桶文件
 
 ```ts
-// ✅ 推荐：只拉进用到的那个组件
+// ✅ 推荐：只拉进用到的那个组件 / 数据
 import { IconFont } from '@haven/ui/IconFont'
 import { ManagerHeader } from '@haven/ui/ManagerHeader'
 import { AssetExportDialog, type ExportFieldConfig } from '@haven/ui/AssetExportDialog'
+import { ProviderIcon } from '@haven/ui/ProviderIcon'
+import { getProviderIcon } from '@haven/ui/provider'
 
 // ❌ 禁止：从桶文件 @haven/ui 导入
 import { IconFont } from '@haven/ui'
@@ -48,7 +50,7 @@ import { IconFont } from '@haven/ui'
 
 **为什么这条是硬性的**（实测，非推测）：桶文件 `src/index.ts` 里含 `element-plus` 各组件的
 样式**纯副作用导入**（`import 'element-plus/es/components/*/style/css'`），Rollup 无法摇树。
-只要**入口**路径引用到桶（`main.ts`、或 resolver 解析模板里的 `<IconFont>`），4 个组件的
+只要**入口**路径引用到桶（`main.ts`、或 resolver 解析模板里的 `<IconFont>`），各组件的
 Element Plus 样式就**全部被提升进首屏 CSS**。e-cam-web 侧实测：
 
 | | 首屏 CSS |
@@ -98,8 +100,14 @@ import 'element-plus/es/components/tooltip/style/css'
 ### 2. 组件不得 import 应用的 `@/` 模块
 
 包内 `@/` 只指向本包 `src/`。若组件确实依赖某个应用工具，先把该片段下沉进包内
-（例：`ProviderIcon` 依赖 `@/utils/constants` 的 `getProviderConfig` 与
-`@/utils/icon-mapping`，故**未进首批**）。
+（`ProviderIcon` 就是这么进来的：它依赖应用 `@/utils/constants` 的 `getProviderConfig`
+与 `@/utils/icon-mapping` 的 `getProviderIcon`，后者的数据表已作为**平台级数据**下沉到
+`src/provider/`，前者经证明对渲染输出零影响后移除——见组件内注释与
+`src/components/__tests__/ProviderIcon.test.ts` 的「不变量」用例）。
+
+平台级**数据**与组件同样按子路径导出（`@haven/ui/provider`）。判断标准是"这个数据是
+平台统一口径，还是某个应用的业务语义"：云厂商图标映射属前者（已进包）；导航菜单图标
+`MODULE_ICONS`、资产类型图标 `ASSET_TYPE_ICONS`、云厂商的区域/资产类型/特性表属后者（留在应用内）。
 
 ## 校验
 
@@ -116,12 +124,14 @@ pnpm verify        # typecheck + test
 | `ManagerHeader` | 212 行 | 与 e-cam-web 逐字节相同；仅依赖 element-plus 图标 |
 | `AssetExportDialog` | 444 行 | 与 e-cam-web 逐字节相同；含 12.2KB 单测 |
 | `CustomIconSelect`（+ `constants.ts`） | 261 + 167 行 | 与 e-cam-web 逐字节相同；依赖包内 IconFont |
+| `ProviderIcon` | 79 行 | 随其平台级依赖 `src/provider/icons.ts` 一并下沉；不依赖 element-plus |
+| `src/provider/icons.ts` | 62 行 | 云厂商图标映射（26 个 token）单一来源；应用侧 re-export，调用点零改动 |
 
-首批组件样式**完全自包含**（零 Sass 变量、零 `@use/@import`，仅用 CSS 变量 `var(--…)`），
+组件样式**完全自包含**（零 Sass 变量、零 `@use/@import`，仅用 CSS 变量 `var(--…)`），
 故可直接编译，主题仍由消费方 CSS 变量驱动。
 
-**待办**：`ProviderIcon`（需先下沉 `getProviderConfig` / `getProviderIcon`）；
-`haven-console` / `opsagent-web` 尚未接入。
+**待办**：`haven-console` / `opsagent-web` 尚未接入。
 
-已接入：`e-cmdb-web`（提交 `145abe5`）、`e-cam-web`（提交 `693dc5f`，67 处 import 已切换、
-本仓副本已删除）——"任一组件不再有第二份实现"对这两个应用已成立。
+已接入：`e-cam-web`（提交 `ec8d86c`）、`e-cmdb-web`（提交 `eee4746`）——两个应用都已
+删除全部本地副本，"任一组件不再有第二份实现"成立（`shared-hashes.json` 里的组件类登记
+已随之清空，只剩请求层/设计令牌/工具等其它共享面）。

@@ -18,6 +18,7 @@ import AssetExportDialog from '../AssetExportDialog.vue'
 import CustomIconSelect from '../CustomIconSelect/index.vue'
 import IconFont from '../IconFont/index.vue'
 import ManagerHeader from '../ManagerHeader/index.vue'
+import ProviderIcon from '../ProviderIcon.vue'
 
 /** 执行挂载并收集 Vue 的"组件未解析"告警 */
 function unresolvedWarnings(mountFn: () => void): string[] {
@@ -72,6 +73,13 @@ describe('Element Plus 组件解析（不依赖消费方全局注册）', () => 
     it('IconFont 无未解析组件告警（本组件只依赖 vue）', () => {
         const warns = unresolvedWarnings(() => {
             mount(IconFont as never, { props: { type: 'linear-x' } as never })
+        })
+        expect(warns).toEqual([])
+    })
+
+    it('ProviderIcon 无未解析组件告警（本组件不依赖 element-plus）', () => {
+        const warns = unresolvedWarnings(() => {
+            mount(ProviderIcon as never, { props: { provider: 'aliyun' } as never })
         })
         expect(warns).toEqual([])
     })

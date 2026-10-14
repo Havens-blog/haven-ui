@@ -10,10 +10,11 @@
  *    注册 Element Plus（依赖 unplugin-vue-components 构建期自动导入），预编译产物
  *    若退化为 resolveComponent 运行时查找会**静默**渲染失败。
  *
- * 首批（与 e-cam-web 逐字节相同、零分歧迁移）：IconFont / ManagerHeader /
- * AssetExportDialog / CustomIconSelect。
- * 待办：ProviderIcon（依赖 @/utils/constants 的 getProviderConfig 与 @/utils/icon-mapping，
- * 需先把该片段下沉到包内）。
+ * 已收：IconFont / ManagerHeader / AssetExportDialog / CustomIconSelect（与 e-cam-web
+ * 逐字节相同、零分歧迁移）；ProviderIcon（同时下沉了它依赖的平台级厂商图标数据，
+ * 见 src/provider/icons.ts）。
+ * 边界外：应用级的图标映射（导航菜单 MODULE_ICONS、资产类型 ASSET_TYPE_ICONS）与
+ * 云厂商的区域/资产类型/特性表（属 CAM 业务语义），留在各应用内。
  */
 
 export { default as IconFont } from './components/IconFont/index.vue'
@@ -23,6 +24,9 @@ export { default as AssetExportDialog } from './components/AssetExportDialog.vue
 export type { ExportFieldConfig } from './components/AssetExportDialog.vue'
 
 export { default as CustomIconSelect } from './components/CustomIconSelect/index.vue'
+
+export { default as ProviderIcon } from './components/ProviderIcon.vue'
+export { PROVIDER_ICONS, getProviderIcon } from './provider/icons'
 export {
     commonIconList,
     fillIconList,

@@ -12,21 +12,30 @@
  *
  * 规则：模板里出现 <el-X>，就必须 import 'element-plus/es/components/X/style/css'。
  */
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-const components = [
-    'AssetExportDialog.vue',
-    'CustomIconSelect/index.vue',
-    'ManagerHeader/index.vue',
-    'IconFont/index.vue',
-]
+/**
+ * 递归枚举本目录下所有 .vue（不再手写清单——手写清单必然漏掉新增组件，
+ * 而漏掉一个组件就等于这条防线对它是空的）。
+ */
+const componentsDir = fileURLToPath(new URL('..', import.meta.url))
+const components = readdirSync(componentsDir, { recursive: true })
+    .map((p) => String(p).replace(/\\/g, '/'))
+    .filter((p) => p.endsWith('.vue'))
+    .sort()
 
 const readSfc = (rel: string) =>
     readFileSync(fileURLToPath(new URL(`../${rel}`, import.meta.url)), 'utf8')
 
 describe('Element Plus 按需样式入口与模板标签一一对应', () => {
+    it('枚举到了全部组件（防止读空导致防线空转）', () => {
+        expect(components.length, `实际枚举: ${components.join(', ')}`).toBeGreaterThanOrEqual(5)
+        expect(components).toContain('ProviderIcon.vue')
+        expect(components).toContain('AssetExportDialog.vue')
+    })
+
     for (const rel of components) {
         it(`${rel} 每个 <el-X> 都有 X/style/css`, () => {
             const src = readSfc(rel)
