@@ -40,6 +40,18 @@
     "./provider": {
       "types": "./src/provider/index.ts",
       "import": "./src/provider/index.ts"
+    },
+    "./format": {
+      "types": "./src/utils/format.ts",
+      "import": "./src/utils/format.ts"
+    },
+    "./cookie": {
+      "types": "./src/utils/cookie.ts",
+      "import": "./src/utils/cookie.ts"
+    },
+    "./theme": {
+      "types": "./src/theme/tokens.d.ts",
+      "import": "./src/theme/tokens.scss"
     }
   },
   "files": [

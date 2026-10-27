@@ -13,6 +13,8 @@
  * 已收：IconFont / ManagerHeader / AssetExportDialog / CustomIconSelect（与 e-cam-web
  * 逐字节相同、零分歧迁移）；ProviderIcon（同时下沉了它依赖的平台级厂商图标数据，
  * 见 src/provider/icons.ts）。
+ * 已收 utils（平台级纯函数，子路径入口 ./format / ./cookie，不进本桶）：format.ts /
+ * cookie.ts（与 e-cam-web 逐字节相同、零分歧迁移）。
  * 边界外：应用级的图标映射（导航菜单 MODULE_ICONS、资产类型 ASSET_TYPE_ICONS）与
  * 云厂商的区域/资产类型/特性表（属 CAM 业务语义），留在各应用内。
  */
