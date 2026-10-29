@@ -6,7 +6,11 @@
           <span class="back-icon">←</span>
         </button>
         <div class="title-content">
-          <h2 class="manager-title">{{ title }}</h2>
+          <!--
+            titleLevel：页面主标题级别。默认 2 保持既有行为（向后兼容）；
+            页面若没有其它 h1，应传 1，避免「整页无 h1」以及 h1→h3 这类层级断裂。
+          -->
+          <component :is="`h${titleLevel}`" class="manager-title">{{ title }}</component>
           <p class="manager-subtitle">{{ subtitle }}</p>
         </div>
       </div>
@@ -59,6 +63,8 @@ import { CirclePlus, RefreshRight } from '@element-plus/icons-vue'
 interface Props {
   title: string
   subtitle: string
+  /** 主标题的标签级别：1 → h1（页面唯一主标题），2 → h2（默认，向后兼容） */
+  titleLevel?: 1 | 2
   addButtonText?: string
   showAddButton?: boolean
   showRefreshButton?: boolean
@@ -68,6 +74,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
+  titleLevel: 2,
   addButtonText: '新增',
   showAddButton: true,
   showRefreshButton: true,
@@ -184,7 +191,8 @@ defineEmits<{
 
 .manager-subtitle {
   font-size: 13px;
-  color: var(--text-tertiary);
+  /* --text-tertiary 在卡片底上仅 3.11:1（WCAG 1.4.3 AA 需 4.5）→ 次文字色（实测约 5.8:1） */
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.4;
 }
