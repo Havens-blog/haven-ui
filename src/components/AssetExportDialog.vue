@@ -54,8 +54,16 @@
         <el-radio-group v-model="exportForm.format" class="format-options">
           <div class="format-card" :class="{ active: exportForm.format === 'xlsx' }" @click="exportForm.format = 'xlsx'">
             <el-icon :size="24"><Document /></el-icon>
-            <span class="format-name">Excel (.xlsx)</span>
-            <span class="format-desc">适合数据分析和编辑</span>
+            <!--
+              文案诚实化（实测 2026-11-01）：
+              该选项产出的**不是**真正的 xlsx（ZIP/OOXML 容器），而是带 UTF-8 BOM 的
+              **制表符分隔纯文本**，只是把扩展名命名为 .xlsx（见下方 exportToXlsx）。
+              原文案「Excel (.xlsx) / 适合数据分析和编辑」会让用户以为是标准 Excel 文件，
+              实际用 Excel 打开会提示「格式与扩展名不匹配」，或整张表挤在一列。
+              本次仅修正文案，不改变产出行为（改真 xlsx 需引入依赖，属产品决策，另议）。
+            -->
+            <span class="format-name">Excel 兼容 (.xlsx)</span>
+            <span class="format-desc">制表符分隔文本，可用 Excel 打开</span>
           </div>
           <div class="format-card" :class="{ active: exportForm.format === 'csv' }" @click="exportForm.format = 'csv'">
             <el-icon :size="24"><Document /></el-icon>
